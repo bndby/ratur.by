@@ -185,11 +185,13 @@ const segments = pathParts.map((_, i) => {
 </style>
 
 <script>
-  const banners = document.querySelectorAll<HTMLElement>('[data-water-banner]');
+  const BANNER_BOUND_ATTR = 'data-water-bubbles-bound';
 
-  for (const banner of banners) {
+  const attachBubblesToBanner = (banner: HTMLElement) => {
+    if (banner.hasAttribute(BANNER_BOUND_ATTR)) return;
+
     const bubblesLayer = banner.querySelector<HTMLElement>('.banner-water__bubbles');
-    if (!bubblesLayer) continue;
+    if (!bubblesLayer) return;
 
     const createBubbles = (event: PointerEvent) => {
       const rect = banner.getBoundingClientRect();
@@ -225,8 +227,14 @@ const segments = pathParts.map((_, i) => {
       }
     };
 
-    banner.addEventListener('pointerdown', (event) => {
-      createBubbles(event);
-    });
-  }
+    banner.addEventListener('pointerdown', createBubbles);
+    banner.setAttribute(BANNER_BOUND_ATTR, 'true');
+  };
+
+  const initWaterBanners = () => {
+    document.querySelectorAll<HTMLElement>('[data-water-banner]').forEach(attachBubblesToBanner);
+  };
+
+  initWaterBanners();
+  document.addEventListener('astro:after-swap', initWaterBanners);
 </script>

@@ -7,26 +7,34 @@ interface Props {
   topper?: string;
   heading?: string;
   reviews?: Review[];
+  limit?: number;
   showYandexLink?: boolean;
 }
 
 const {
   topper = 'Отзывы',
   heading = 'Что клиенты говорят о нас',
+  limit,
   showYandexLink = true,
-} = Astro.props;
+}: Props = Astro.props;
 
 const { reviews, aggregateRating } = Astro.props.reviews
   ? {
       reviews: Astro.props.reviews,
       aggregateRating: {
         ratingValue:
-          Astro.props.reviews.reduce((sum, { rating }) => sum + rating, 0) /
-          Astro.props.reviews.length,
+          Astro.props.reviews.length > 0
+            ? Astro.props.reviews.reduce((sum, { rating }) => sum + rating, 0) /
+              Astro.props.reviews.length
+            : 0,
         reviewCount: Astro.props.reviews.length,
       },
     }
   : await getReviewsData();
+
+const normalizedLimit =
+  typeof limit === 'number' && Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : undefined;
+const displayedReviews = normalizedLimit === undefined ? reviews : reviews.slice(0, normalizedLimit);
 ---
 
 <section class="bg-surface py-section">
@@ -49,7 +57,7 @@ const { reviews, aggregateRating } = Astro.props.reviews
     </div>
 
     <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
-      {reviews.map(({ quote, name, location, rating = 5, date }) => (
+      {displayedReviews.map(({ quote, name, location, rating = 5, date }) => (
         <li class="flex flex-col rounded-lg border border-border bg-background p-6 shadow-sm">
           <div class="mb-4 flex gap-0.5" aria-label={`Оценка ${rating} из 5`}>
             {Array.from({ length: 5 }).map((_, i) => (

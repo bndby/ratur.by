@@ -8,6 +8,7 @@ interface Props {
   heading?: string;
   description?: string;
   images?: GalleryImage[];
+  limit?: number;
   ctaLabel?: string;
   ctaHref?: string;
 }
@@ -17,9 +18,14 @@ const {
   heading = "Недавние проекты",
   description = "Посмотрите качество и внимание к деталям, которые мы приносим в каждый проект.",
   images = defaultImages,
+  limit,
   ctaLabel = "Посмотреть все проекты",
   ctaHref = "/works",
 } = Astro.props;
+
+const normalizedLimit =
+  typeof limit === "number" && Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : undefined;
+const displayedImages = normalizedLimit === undefined ? images : images.slice(0, normalizedLimit);
 ---
 
 <section class="py-section">
@@ -36,7 +42,7 @@ const {
 
     <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
       {
-        images.map(({ src, alt }) => (
+        displayedImages.map(({ src, alt }) => (
           <div
             class="group relative overflow-hidden rounded-lg aspect-4/3 bg-surface"
             data-gallery-item

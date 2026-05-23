@@ -1,0 +1,41 @@
+---
+import { services } from '../data/services';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+const normalizePath = (path: string) => path.replace(/\/$/, '');
+const normalizedCurrentPath = normalizePath(currentPath);
+---
+
+<aside class="lg:sticky lg:top-24 lg:self-start">
+  <nav class="rounded-lg border border-border bg-background p-4 shadow-sm" aria-label="Услуги">
+    <h2 class="font-heading text-lg font-semibold uppercase text-text">Услуги</h2>
+    <ul class="mt-4 space-y-2">
+      {
+        services.map((service) => {
+          const isActive = normalizePath(service.href) === normalizedCurrentPath;
+
+          return (
+            <li>
+              <a
+                href={service.href}
+                aria-current={isActive ? 'page' : undefined}
+                class:list={[
+                  'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-primary text-white'
+                    : 'text-text-muted hover:bg-primary/10 hover:text-primary',
+                ]}
+              >
+                {service.title}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</aside>

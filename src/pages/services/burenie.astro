@@ -7,6 +7,7 @@ import Footer from '../../components/Footer.astro';
 import CTA from '../../components/CTA.astro';
 import { brand } from '../../config/brand';
 import Banner from '../../components/Banner.astro';
+import ServiceSidebar from '../../components/ServiceSidebar.astro';
 ---
 
 <BaseLayout title={pageTitle} description={`Услуга "${pageTitle}" от ${brand.name}.`}>
@@ -15,7 +16,8 @@ import Banner from '../../components/Banner.astro';
   <Banner title={pageTitle} />
 
   <section class="py-section">
-    <div class="mx-auto max-w-site px-4 sm:px-6">
+    <div class="mx-auto grid max-w-site gap-8 px-4 sm:px-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-start">
+      <ServiceSidebar currentPath={Astro.url.pathname} />
       <div class="mx-auto max-w-3xl">
         <h2 class="text-center font-heading text-h2 font-bold uppercase text-text">{pageTitle}</h2>
 
