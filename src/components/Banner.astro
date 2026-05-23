@@ -21,8 +21,27 @@ const segments = pathParts.map((_, i) => {
 });
 ---
 
-<section class="bg-primary py-14 sm:py-16 lg:py-20">
-  <div class="mx-auto max-w-site px-4 sm:px-6">
+<section
+  class="banner-water relative isolate overflow-hidden bg-primary py-14 sm:py-16 lg:py-20"
+  data-water-banner
+>
+  <div class="banner-water__base" aria-hidden="true"></div>
+  <div class="banner-water__waves" aria-hidden="true">
+    <svg class="banner-water__wave banner-water__wave--back" viewBox="0 0 1200 280" preserveAspectRatio="none">
+      <path
+        d="M0,160 C120,130 260,210 400,178 C540,146 660,88 790,122 C930,160 1040,210 1200,175 L1200,280 L0,280 Z"
+        fill="currentColor"
+      />
+    </svg>
+    <svg class="banner-water__wave banner-water__wave--front" viewBox="0 0 1200 280" preserveAspectRatio="none">
+      <path
+        d="M0,188 C120,165 270,220 430,192 C580,165 730,108 890,146 C1020,176 1120,214 1200,205 L1200,280 L0,280 Z"
+        fill="currentColor"
+      />
+    </svg>
+  </div>
+  <div class="banner-water__bubbles" aria-hidden="true"></div>
+  <div class="relative z-10 mx-auto max-w-site px-4 sm:px-6">
     <!-- Breadcrumb -->
     <nav aria-label="Breadcrumb" class="mb-4">
       <ol class="flex flex-wrap items-center gap-1.5 text-sm text-primary-fg/60">
@@ -49,3 +68,165 @@ const segments = pathParts.map((_, i) => {
     </h1>
   </div>
 </section>
+
+<style>
+  .banner-water__base,
+  .banner-water__waves,
+  .banner-water__bubbles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .banner-water__base {
+    background:
+      radial-gradient(125% 90% at 50% 0%, rgb(255 255 255 / 0.055) 0%, transparent 62%),
+      linear-gradient(165deg, rgb(255 255 255 / 0.025) 0%, transparent 48%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.018) 0%, transparent 100%);
+    animation: water-base-shift 18s ease-in-out infinite alternate;
+  }
+
+  .banner-water__waves,
+  .banner-water__bubbles {
+    overflow: hidden;
+  }
+
+  .banner-water__waves {
+    transform-origin: center center;
+  }
+
+  .banner-water__wave {
+    position: absolute;
+    bottom: -1px;
+    left: -10%;
+    width: 120%;
+    height: 100%;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  .banner-water__wave--back {
+    color: rgb(255 255 255 / 0.04);
+    animation: wave-drift-a 16s linear infinite;
+  }
+
+  .banner-water__wave--front {
+    color: rgb(255 255 255 / 0.065);
+    animation: wave-drift-c 9s linear infinite;
+  }
+
+  :global(.banner-water__bubble) {
+    position: absolute;
+    width: var(--size, 8px);
+    height: var(--size, 8px);
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.18);
+    border: 1px solid rgb(255 255 255 / 0.35);
+    transform: translate(-50%, -50%);
+    animation: water-bubble-rise var(--duration, 1700ms) ease-out forwards;
+  }
+
+  @keyframes water-base-shift {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.92;
+    }
+    100% {
+      transform: translate3d(0, -4px, 0) scale(1.01);
+      opacity: 1;
+    }
+  }
+
+  @keyframes wave-drift-a {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-3.5%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes wave-drift-c {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-6%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes water-bubble-rise {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.45);
+    }
+    12% {
+      opacity: var(--alpha, 0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(-50% + var(--drift-x, 0px)), calc(-50% - var(--rise, 60px))) scale(var(--scale, 1.15));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .banner-water__base,
+    .banner-water__wave,
+    :global(.banner-water__bubble) {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const banners = document.querySelectorAll<HTMLElement>('[data-water-banner]');
+
+  for (const banner of banners) {
+    const bubblesLayer = banner.querySelector<HTMLElement>('.banner-water__bubbles');
+    if (!bubblesLayer) continue;
+
+    const createBubbles = (event: PointerEvent) => {
+      const rect = banner.getBoundingClientRect();
+      const centerX = event.clientX - rect.left;
+      const centerY = event.clientY - rect.top;
+      const amount = 5 + Math.floor(Math.random() * 4);
+
+      for (let index = 0; index < amount; index += 1) {
+        const bubble = document.createElement('span');
+        bubble.className = 'banner-water__bubble';
+        const spreadX = (Math.random() * 26 - 13).toFixed(2);
+        const spreadY = (Math.random() * 12 - 6).toFixed(2);
+        const driftX = (Math.random() * 40 - 20).toFixed(2);
+        const rise = (36 + Math.random() * 54).toFixed(2);
+        const size = (5 + Math.random() * 7).toFixed(2);
+        const scale = (1.05 + Math.random() * 0.35).toFixed(2);
+        const alpha = (0.3 + Math.random() * 0.35).toFixed(2);
+        const duration = (1200 + Math.random() * 900).toFixed(0);
+        const delay = (Math.random() * 200).toFixed(0);
+
+        bubble.style.left = `${centerX + Number(spreadX)}px`;
+        bubble.style.top = `${centerY + Number(spreadY)}px`;
+        bubble.style.setProperty('--drift-x', `${driftX}px`);
+        bubble.style.setProperty('--rise', `${rise}px`);
+        bubble.style.setProperty('--size', `${size}px`);
+        bubble.style.setProperty('--scale', scale);
+        bubble.style.setProperty('--alpha', alpha);
+        bubble.style.setProperty('--duration', `${duration}ms`);
+        bubble.style.animationDelay = `${delay}ms`;
+
+        bubblesLayer.append(bubble);
+        bubble.addEventListener('animationend', () => bubble.remove(), { once: true });
+      }
+    };
+
+    banner.addEventListener('pointerdown', (event) => {
+      createBubbles(event);
+    });
+  }
+</script>
