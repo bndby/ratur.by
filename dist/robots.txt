@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ratur.by/sitemap-index.xml
