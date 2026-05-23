@@ -1,0 +1,72 @@
+---
+export const pageTitle = 'Отзывы';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Banner from '../components/Banner.astro';
+import CTA from '../components/CTA.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import { brand } from '../config/brand';
+import { client } from '../data/client';
+import { getReviewsData } from '../data/reviews';
+
+const yandex = await getReviewsData();
+---
+
+<BaseLayout
+  title="Отзывы"
+  description={`Отзывы клиентов ${brand.name} на Яндекс Картах.`}
+  schema={{
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: client.name,
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: String(yandex.aggregateRating.ratingValue),
+      reviewCount: String(yandex.aggregateRating.reviewCount),
+      bestRating: '5',
+    },
+  }}
+>
+  <Header slot="header" />
+
+  <Banner title={pageTitle} />
+
+  <section class="py-section">
+    <div class="mx-auto max-w-site px-4 sm:px-6">
+      <div class="mx-auto mb-10 max-w-2xl text-center lg:mb-14">
+        <h2 class="font-heading text-h2 font-bold uppercase text-text">Яндекс Карты</h2>
+        <p class="mt-3 text-text-muted leading-relaxed">
+          Рейтинг {yandex.aggregateRating.ratingValue} · {yandex.aggregateRating.reviewCount} отзывов.
+          <a
+            href={client.socials.yandex}
+            class="ml-1 text-accent underline-offset-2 hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Открыть на Яндекс Картах
+          </a>
+        </p>
+      </div>
+
+      <ReviewCards reviews={yandex.reviews} />
+
+      <p class="mt-10 text-center">
+        <a
+          href={client.socials.yandex}
+          class="inline-flex items-center gap-2 font-semibold text-accent underline-offset-2 hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Все отзывы на Яндекс Картах
+          <span aria-hidden="true">→</span>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <CTA />
+
+  <Footer slot="footer" />
+</BaseLayout>

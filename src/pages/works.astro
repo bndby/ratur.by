@@ -1,0 +1,24 @@
+---
+export const pageTitle = 'Наши работы';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CTA from '../components/CTA.astro';
+import { brand } from '../config/brand';
+import Banner from '../components/Banner.astro';
+import Gallery from '../components/Gallery.astro';
+---
+
+<BaseLayout title="Наши работы" description={`Explore the full range of services offered by ${brand.name}. From repairs to remodeling, we do it all.`}>
+    <Header slot="header" />
+
+    <Banner title={pageTitle} />
+
+
+    <Gallery ctaLabel="" />
+
+    <CTA />
+
+    <Footer slot="footer" />
+  </BaseLayout>
