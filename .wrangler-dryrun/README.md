@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "ratur-by" generated at 2026-05-23T13:10:26.134Z.
