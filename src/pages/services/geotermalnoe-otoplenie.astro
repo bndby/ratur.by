@@ -8,6 +8,8 @@ import CTA from '../../components/CTA.astro';
 import { brand } from '../../config/brand';
 import Banner from '../../components/Banner.astro';
 import ServiceSidebar from '../../components/ServiceSidebar.astro';
+import Image from 'astro/components/Image.astro';
+import geotermalnoeOtoplenieImg from './geotermalnoe-otoplenie.jpg';
 ---
 
 <BaseLayout title={pageTitle} description={`Услуга "${pageTitle}" от ${brand.name}.`}>
@@ -21,11 +23,14 @@ import ServiceSidebar from '../../components/ServiceSidebar.astro';
       <div class="mx-auto max-w-3xl">
         <h2 class="text-center font-heading text-h2 font-bold uppercase text-text">{pageTitle}</h2>
         <div class="mt-6 space-y-4 text-text-muted leading-relaxed">
-          <h3 class="font-heading text-h3 font-semibold text-text">
+          <p>
             Геотермальный тепловой насос - наиболее экономичная система отопления и охлаждения загородного
             дома. Насос использует бесплатную возобновляемую солнечную энергию, накопленную недрами Земли.
             При затрате 1 КВт энергии он вырабатывает до 5 КВт.
-          </h3>
+          </p>
+
+
+          <Image src={geotermalnoeOtoplenieImg} alt="Геотермальное отопление" />
           <h3 class="font-heading text-h3 font-semibold text-text">ЧТО ТАКОЕ ГЕОТЕРМАЛЬНАЯ ЭНЕРГИЯ?</h3>
           <p>
             Геотермальная энергия — результат солнечного излучения. Она накапливается в земле. Этим
