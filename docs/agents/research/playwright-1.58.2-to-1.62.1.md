@@ -27,7 +27,7 @@
 | Нет | Debian 11 больше не поддерживается | 1.62.0 | Не целевая OS |
 | Нет | clipboard isolation в headless | 1.62.0 | Тесты clipboard не трогают |
 | Низкий | `page.waitForTimeout` | — | Вызывается в perf-тесте; в 1.59–1.62 **не удалён** |
-| Нет | tsconfig `extends` / project references ломались в 1.62.0 | 1.62.1 | Фикс в цели bump; отдельного tsconfig для тестов нет |
+| Низкий (закрыт патчем) | tsconfig `extends` bare specifier ломался в 1.62.0 | 1.62.1 | Репо: `"extends": "astro/tsconfigs/strict"` в `tsconfig.json`; 1.62.1 это чинит |
 
 ## Источники
 
