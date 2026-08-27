@@ -28,7 +28,7 @@
     "astro": "astro",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:perf": "playwright test tests/performance.spec.ts",
+    "test:perf": "PERF_TESTS=1 playwright test tests/performance.spec.ts",
     "test:report": "playwright show-report"
   },
   "dependencies": {
